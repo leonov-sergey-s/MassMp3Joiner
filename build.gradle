@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id 'application'
+    id "io.freefair.lombok" version "5.0.0-rc4"
+}
+
+group 'com.stc.lss.projects'
+version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+}
+
+application {
+    mainClassName = 'com.stc.lss.projects.MassMp3Joiner.Application'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": application.mainClassName
+    }
+}
+
+task createAppConfigFile(dependsOn: jar) {
+    def toArchiveDir = file("$buildDir/toArchive")
+    outputs.dir toArchiveDir
+    doLast {
+        toArchiveDir.mkdirs()
+        def file = new File(toArchiveDir, 'config.properties')
+        file.write(
+                "mp3wrap=../utils/mp3wrap-0.5/mp3wrap.exe\n" +
+                        "mp3val=../utils/mp3val-0.1.8/mp3val.exe\n" +
+                        "chunk-size=7\n" +
+                        "shuffle=true\n" +
+                        "#input-dir=C:/Music/input\n" +
+                        "#output-dir=C:/Music/output\n"
+        )
+    }
+}
+
+distributions {
+    main {
+        contents {
+            from("${projectDir}/utils") {
+                into 'utils'
+            }
+            from(createAppConfigFile) {
+                into 'bin'
+            }
+        }
+    }
+}
