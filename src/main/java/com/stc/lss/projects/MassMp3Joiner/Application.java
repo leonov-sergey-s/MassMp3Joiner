@@ -53,8 +53,6 @@ public class Application {
     }
 
     private int joinMp3Files(List<String> listMp3Files, String outputMp3FilePath) {
-System.out.println("list: " + String.join(",",listMp3Files));
-//if (true) return -1;
         try {
             //TODO: path to param
             String command = mp3wrap.toAbsolutePath() + " " +
@@ -83,8 +81,8 @@ System.out.println("list: " + String.join(",",listMp3Files));
         }
 
         for (int i = 0; i < listOfChunks.size(); i++) {
-            String n = String.valueOf(i+1);
-            System.out.println("\n***CHUNK №" + n + ":\n");
+            String n = String.valueOf(i + 1);
+            System.out.println("\n***CHUNK #" + n + ":\n");
             int returnCode = joinMp3Files(
                     listOfChunks.get(i),
                     outputDir.resolve(n).toAbsolutePath().toString()
