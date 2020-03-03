@@ -61,7 +61,7 @@ public class Application {
             Process p = Runtime.getRuntime().exec(command);
             new Thread(new SyncPipe(p.getInputStream(), System.out)).start();
             int returnCode = p.waitFor();
-            if (returnCode == 0) fixMp3File(outputMp3FilePath + "_MP3WRAP.mp3");
+            if (returnCode == 0) return fixMp3File(outputMp3FilePath + "_MP3WRAP.mp3");
             return returnCode;
         } catch (Exception e) {
             return -1;
@@ -79,7 +79,8 @@ public class Application {
             System.out.println("\n***TOTAL CHUNKS: " + listOfChunks.size());
             Files.newDirectoryStream(outputDir, "*.mp3").forEach(path -> path.toFile().delete());
         }
-
+        int done = 0;
+        int failed = 0;
         for (int i = 0; i < listOfChunks.size(); i++) {
             String n = String.valueOf(i + 1);
             System.out.println("\n***CHUNK #" + n + ":\n");
@@ -87,9 +88,13 @@ public class Application {
                     listOfChunks.get(i),
                     outputDir.resolve(n).toAbsolutePath().toString()
             );
-            System.out.println("\n***CHUNK №" + n + (returnCode == 0 ? " - OK" : " - FAILED"));
+            if (returnCode == 0) done++;
+            else failed++;
+
+            System.out.println("\n***CHUNK #" + n + (returnCode == 0 ? " - OK" : " - FAILED"));
         }
-        System.out.println("\n***ALL DONE!");
+        System.out.println("\n***TOTAL DONE: " + done);
+        System.out.println("***TOTAL FAILED: " + failed);
     }
 
     private void parseProperties() {

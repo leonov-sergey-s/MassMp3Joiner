@@ -24,7 +24,7 @@ NOTE: All mp3 files in output directory will be deleted before start mp3wrap!
 ```bash
 ./gradlew clean build
 ```
-After this using zip or tar archives with distribution from  `build\distributions` folder.
+After this using zip or tar archives with distribution from  `build/distributions` folder.
 
 ## Run
 
